@@ -1,0 +1,74 @@
+﻿@model PagedList.IPagedList<MSIdentity.Models.Product>
+@using PagedList.Mvc;
+
+<link href="~/CSS/PagedList.css" rel="stylesheet" />
+@Styles.Render("~/CSS/PagedList.css")
+@section scripts{
+    @Scripts.Render("~/Scripts/jquery-1.10.2.min.js")
+    @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")
+
+}
+<div id="gridContent">
+    <table class="table">
+        <tr>
+            <th>
+                @Ajax.ActionLink("Name", "Index",
+                    new { sortOrder = ViewBag.DescriptionSortParm, currentFilter = ViewBag.CurrentFilter },
+                    new AjaxOptions
+
+                    {
+                        UpdateTargetId = "gridContent", // <-- DOM element ID to update
+
+                        InsertionMode = InsertionMode.Replace, // <-- Replace the content of DOM element
+
+                        HttpMethod = "GET", // <-- HTTP method
+
+                    })
+
+
+                @*@Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })*@
+            </th>
+            <th>
+                @Html.ActionLink("Description", "Index", new { sortOrder = ViewBag.DescriptionSortParm, currentFilter = ViewBag.CurrentFilter })
+            </th>
+            <th>
+                @Html.ActionLink("Price", "Index", new { sortOrder = ViewBag.PriceSortParm, currentFilter = ViewBag.CurrentFilter })
+            </th>
+            <th></th>
+        </tr>
+
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @*@Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.ID })*@
+                </td>
+            </tr>
+        }
+
+    </table>
+    <br />
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+    @Html.PagedListPager(Model, page => Url.Action("Index",
+        new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+    @using (Html.BeginForm("Index", "Product", FormMethod.Get))
+    {
+        <p>
+            @Html.TextBox("page", ViewBag.CurrentFilter as string, null, new { style = "width:40px" })
+
+        </p>
+    }
+</div>
