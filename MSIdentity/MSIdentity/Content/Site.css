@@ -60,3 +60,11 @@ input[type="checkbox"].input-validation-error {
 {
     background-image: url('Images/arrow-down.png');	
 }
+.delete
+{
+    display: inline-block;
+    height: 24px;    
+    vertical-align: middle;
+    width: 24px;
+    background-image: url('Images/delete.png');	
+}

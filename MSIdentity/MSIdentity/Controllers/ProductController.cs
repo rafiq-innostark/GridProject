@@ -11,7 +11,7 @@ namespace MSIdentity.Controllers
     public class ProductController : Controller
     {
         ApplicationDbContext db = new ApplicationDbContext();
-        public ViewResult Index(string sortOrder, string currentFilter, string searchString, int? page, string categoryId, int sortBy = 1, bool isAsc = true)
+        public ActionResult Index(int? pageSize, string sortOrder, string currentFilter, string searchString, int? page, int? categoryId, int sortBy = 1, bool isAsc = true)
         {
 
             ViewBag.CurrentSort = sortOrder;
@@ -39,7 +39,7 @@ namespace MSIdentity.Controllers
             //    products = products.Where(s => s.Name.ToUpper().Contains(searchString.ToUpper())
             //                           && s.CategoryId == categoryId);
             //}  
-            if (!String.IsNullOrEmpty(categoryId))
+            if (categoryId != null)
             {
                 products = products.Where(s => s.CategoryId == categoryId);
             }
@@ -64,9 +64,19 @@ namespace MSIdentity.Controllers
 
             ViewBag.TotalNoOfRec = products.Count();
             //products = products.OrderByDescending(s => s.Name);
-            int pageSize = 3;
+
+            int defaultPageSize = 3;
+            if (pageSize != null)
+            {
+                defaultPageSize = (int)pageSize;
+            }
+            ViewBag.pageSize = defaultPageSize;
             int pageNumber = (page ?? 1);
-            return View(products.ToPagedList(pageNumber, pageSize));
+            if (Request.IsAjaxRequest())
+            {
+                return PartialView("_Product", products.ToPagedList(pageNumber, defaultPageSize));
+            }
+            return View(products.ToPagedList(pageNumber, defaultPageSize));
         }
 
         //

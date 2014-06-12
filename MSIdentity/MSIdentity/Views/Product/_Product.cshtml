@@ -1,40 +1,65 @@
 ﻿@model PagedList.IPagedList<MSIdentity.Models.Product>
 @using PagedList.Mvc;
 
-<link href="~/CSS/PagedList.css" rel="stylesheet" />
-@Styles.Render("~/CSS/PagedList.css")
-@section scripts{
-    @Scripts.Render("~/Scripts/jquery-1.10.2.min.js")
-    @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")
+<script type="text/javascript">
+    $(function () {
+        $('#myPager').on('click', 'a', function () {
+            $.ajax({
+                url: this.href,
+                type: 'GET',
+                cache: false,
+                success: function (result) {
+                    $('#gridContent').html(result);
+                }
+            });
+            return false;
+        });
+    });
+    $(function () {
+        $("#NumSelected").change(function () {
+            var url = '/Product/Index/?' + "pageSize=" + $("#NumSelected").val();
+              $.ajax({
+                  url: url,
+                type: 'GET',
+                 cache: false,
+                 success: function (result) {
+                     $('#gridContent').html(result);
+                     $('#NumSelected').val(@ViewBag.pageSize);
+
+
+                }
+            });
+
+        });
+    });
+</script>
+
+@helper SortLink(string name, int id)
+{ @Ajax.ActionLink(name, "Index",
+                                     new { sortby = id, isasc = (id == ViewBag.sortBy ? (!@ViewBag.isAsc).ToString().ToLower() : true) },
+                        new AjaxOptions
+
+                        {
+                            UpdateTargetId = "gridContent", // <-- DOM element ID to update
+
+                            InsertionMode = InsertionMode.Replace, // <-- Replace the content of DOM element
+
+                            HttpMethod = "GET", // <-- HTTP method
+
+                        })
+    if (id == ViewBag.sortBy)
+    {
+        <span class="arrow @(ViewBag.isAsc ? "up" : "down")"></span>
+    }
 
 }
-<div id="gridContent">
+<div id="gridContent" style="margin-left: 10px;margin-right: 10px;margin-top: 7px;">
     <table class="table">
         <tr>
-            <th>
-                @Ajax.ActionLink("Name", "Index",
-                    new { sortOrder = ViewBag.DescriptionSortParm, currentFilter = ViewBag.CurrentFilter },
-                    new AjaxOptions
-
-                    {
-                        UpdateTargetId = "gridContent", // <-- DOM element ID to update
-
-                        InsertionMode = InsertionMode.Replace, // <-- Replace the content of DOM element
-
-                        HttpMethod = "GET", // <-- HTTP method
-
-                    })
-
-
-                @*@Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })*@
-            </th>
-            <th>
-                @Html.ActionLink("Description", "Index", new { sortOrder = ViewBag.DescriptionSortParm, currentFilter = ViewBag.CurrentFilter })
-            </th>
-            <th>
-                @Html.ActionLink("Price", "Index", new { sortOrder = ViewBag.PriceSortParm, currentFilter = ViewBag.CurrentFilter })
-            </th>
-            <th></th>
+            <th> @SortLink("Name", 1) </th>
+            <th> @SortLink("Description", 2)  </th>
+            <th> @SortLink("Price", 3)</th>
+            <th> Delete</th>
         </tr>
 
 
@@ -45,30 +70,65 @@
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Description)
+                    @Html.ActionLink(item.Description, "Delete", new { id = item.Id })
+
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Price)
+                    @{
+
+                    }
+                    @Html.DisplayFor(modelItem => item.Price).0
                 </td>
                 <td>
                     @*@Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
-                        @Html.ActionLink("Details", "Details", new { id = item.ID }) |
-                        @Html.ActionLink("Delete", "Delete", new { id = item.ID })*@
+                        @Html.ActionLink("Details", "Details", new { id = item.ID }) |*@
+                    @Html.ActionLink(".", "Delete", new { id = item.Id }, new { @class = "delete" })
+                   
                 </td>
             </tr>
         }
 
     </table>
     <br />
-    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+    <div id="myPager">
 
-    @Html.PagedListPager(Model, page => Url.Action("Index",
-        new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
-    @using (Html.BeginForm("Index", "Product", FormMethod.Get))
-    {
-        <p>
-            @Html.TextBox("page", ViewBag.CurrentFilter as string, null, new { style = "width:40px" })
+        <table style="width: 100%;">
+            <tr>
+                <td style="width: 25%">Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount</td>
+                <td style="width: 50%">
+                    @Html.PagedListPager(Model, page => Url.Action("Index",
+                        new { page }))
+                </td>
+                <td>
 
-        </p>
-    }
+
+                    <select id="NumSelected" name="NumSelected">
+                        @for (var i = 0; i <= 20; i++)
+                        {
+                            <option value="@i">@i</option>
+                        }.
+                    </select>
+
+                </td>
+                <td style="text-align: left">
+                    @using (Ajax.BeginForm("Index", "Product", new AjaxOptions { HttpMethod = "Get", InsertionMode = InsertionMode.Replace, UpdateTargetId = "gridContent" }))
+                    {
+
+                        <p>
+                            @Html.TextBox("page", ViewBag.CurrentFilter as string, null, new { style = "width:40px" })\@Model.PageCount
+                        </p>
+
+                    }
+                </td>
+            </tr>
+        </table>
+    </div>
 </div>
+
+@section scripts{
+
+    @Scripts.Render("~/Scripts/jquery-1.10.2.min.js")
+    @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")
+
+
+}

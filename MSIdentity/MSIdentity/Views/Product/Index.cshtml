@@ -15,44 +15,12 @@
         height: 40px;
     }
 </style>
-<script type="text/javascript">
-    $(function () {
-        $('#myPager').on('click', 'a', function () {
-            $.ajax({
-                url: this.href,
-                type: 'GET',
-                cache: false,
-                success: function (result) {
-                    $('#gridContent').html(result);
-                }
-            });
-            return false;
-        });
-    });
-</script>
+
 @{
     ViewBag.Title = "Products";
 }
 
-@helper SortLink(string name, int id)
-{ @Ajax.ActionLink(name, "Index",
-                                     new { sortby = id, isasc = (id == ViewBag.sortBy ? (!@ViewBag.isAsc).ToString().ToLower() : true) },
-                        new AjaxOptions
 
-                        {
-                            UpdateTargetId = "gridContent", // <-- DOM element ID to update
-
-                            InsertionMode = InsertionMode.Replace, // <-- Replace the content of DOM element
-
-                            HttpMethod = "GET", // <-- HTTP method
-
-                        })
-    if (id == ViewBag.sortBy)
-    {
-        <span class="arrow @(ViewBag.isAsc ? "up" : "down" )"></span>
-    }
-
-}
 <div id="main" style="border-style: solid; border-width: 1px; margin-top:20px;">
     <div style="margin-left: 10px;">
         <p>
@@ -74,69 +42,7 @@
 <div style="border-style: solid; border-width: 1px; margin-top:10px;">
     <p style="margin-left: 10px;margin-top: 15px;">Total Number of records: @ViewBag.TotalNoOfRec</p>
     <br />
-    <div id="gridContent" style="margin-left: 10px;margin-right: 10px;margin-top: 7px;">
-        <table class="table">
-            <tr>
-                <th> @SortLink("Name", 1) </th>
-                <th> @SortLink("Description", 2)  </th>
-                <th> @SortLink("Price", 3)</th>
-            </tr>
-
-
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td>
-                        @Html.ActionLink(item.Description, "Delete", new { id = item.Id })
-
-                    </td>
-                    <td>
-                        @{
-
-                        }
-                        @Html.DisplayFor(modelItem => item.Price).0
-                    </td>
-                    <td>
-                        @*@Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
-                            @Html.ActionLink("Details", "Details", new { id = item.ID }) |*@
-                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-                    </td>
-                </tr>
-            }
-
-        </table>
-        <br />
-        <div id="myPager">
-
-            <table style="width: 100%;">
-                <tr>
-                    <td style="width: 25%">Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount</td>
-                    <td style="width: 67%">
-                        @Html.PagedListPager(Model, page => Url.Action("Index",
-                                new { page }))
-                    </td>
-
-                    <td style="text-align: left">
-                        @using (Ajax.BeginForm("Index", "Product", new AjaxOptions { HttpMethod = "Get", InsertionMode = InsertionMode.Replace, UpdateTargetId = "gridContent" }))
-                        {
-
-                            <p>
-                                @Html.TextBox("page", ViewBag.CurrentFilter as string, null, new { style = "width:40px" })\@Model.PageCount
-                            </p>
-
-                        }
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-
-
-
-    </div>
+    @Html.Partial("_Product",Model)
 </div>
 
 @section scripts{
