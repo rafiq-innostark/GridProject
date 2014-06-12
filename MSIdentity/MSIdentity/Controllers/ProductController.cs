@@ -10,13 +10,15 @@ namespace MSIdentity.Controllers
 {
     public class ProductController : Controller
     {
-        public ViewResult Index(string sortOrder, string currentFilter, string searchString, int? page, string categoryId)
+        ApplicationDbContext db = new ApplicationDbContext();
+        public ViewResult Index(string sortOrder, string currentFilter, string searchString, int? page, string categoryId, int sortBy = 1, bool isAsc = true)
         {
-            ApplicationDbContext db = new ApplicationDbContext();
+
             ViewBag.CurrentSort = sortOrder;
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewBag.DescriptionSortParm = String.IsNullOrEmpty(sortOrder) ? "description_desc" : "";
             ViewBag.PriceSortParm = String.IsNullOrEmpty(sortOrder) ? "price_desc" : "";
+
             var query = db.Categories.Select(c => new { c.Id, c.Name });
             ViewBag.Categories = new SelectList(query.AsEnumerable(), "Id", "Name");
             if (searchString != null)
@@ -37,25 +39,29 @@ namespace MSIdentity.Controllers
             //    products = products.Where(s => s.Name.ToUpper().Contains(searchString.ToUpper())
             //                           && s.CategoryId == categoryId);
             //}  
-            if ( !String.IsNullOrEmpty(categoryId))
+            if (!String.IsNullOrEmpty(categoryId))
             {
-                products = products.Where(s=> s.CategoryId == categoryId);
+                products = products.Where(s => s.CategoryId == categoryId);
             }
-            switch (sortOrder)
+            #region Sorting
+            switch (sortBy)
             {
-                case "name_desc":
-                    products = products.OrderByDescending(s => s.Name);
+                case 1:
+                    products = isAsc ? products.OrderBy(p => p.Name) : products.OrderByDescending(p => p.Name);
                     break;
-                case "description_desc":
-                    products = products.OrderByDescending(s => s.Description);
+
+                case 2:
+                    products = isAsc ? products.OrderBy(p => p.Description) : products.OrderByDescending(p => p.Description);
                     break;
-                case "price_desc":
-                    products = products.OrderByDescending(s => s.Price);
-                    break;
-                default:  // Name ascending 
-                    products = products.OrderBy(s => s.Name);
+
+                default:
+                    products = isAsc ? products.OrderBy(p => p.Price) : products.OrderByDescending(p => p.Price);
                     break;
             }
+            #endregion
+            ViewBag.SortBy = sortBy;
+            ViewBag.IsAsc = isAsc;
+
             ViewBag.TotalNoOfRec = products.Count();
             //products = products.OrderByDescending(s => s.Name);
             int pageSize = 3;

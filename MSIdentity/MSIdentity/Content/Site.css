@@ -15,6 +15,9 @@ select,
 textarea {
     max-width: 280px;
 }
+#mySelect {
+    height: 28px; 
+}
 
 /* styles for validation helpers */
 .field-validation-error {
@@ -39,4 +42,21 @@ input[type="checkbox"].input-validation-error {
 
 .validation-summary-valid {
     display: none;
+}
+.arrow {
+	display: inline-block;
+    height: 16px;    
+    vertical-align: middle;
+    width: 16px;
+      /*border: 1px solid black;*/
+}
+
+.arrow.up 
+{
+    background-image: url('Images/arrow-up.png');	
+}
+
+.arrow.down
+{
+    background-image: url('Images/arrow-down.png');	
 }
