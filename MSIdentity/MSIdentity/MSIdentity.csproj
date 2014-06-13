@@ -182,22 +182,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201406061215530_InitialCreate.cs" />
-    <Compile Include="Migrations\201406061215530_InitialCreate.Designer.cs">
-      <DependentUpon>201406061215530_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201406100700141_category.cs" />
-    <Compile Include="Migrations\201406100700141_category.Designer.cs">
-      <DependentUpon>201406100700141_category.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201406100700395_product.cs" />
-    <Compile Include="Migrations\201406100700395_product.Designer.cs">
-      <DependentUpon>201406100700395_product.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201406121316244_Id.cs" />
-    <Compile Include="Migrations\201406121316244_Id.Designer.cs">
-      <DependentUpon>201406121316244_Id.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Category.cs" />
@@ -214,6 +198,7 @@
     <Content Include="Content\Images\arrow-down.png" />
     <Content Include="Content\Images\arrow-up.png" />
     <Content Include="Content\Images\delete.png" />
+    <Content Include="Content\Images\edit.png" />
     <Content Include="Content\PagedList.css" />
     <Content Include="CSS\bootstrap-responsive.css" />
     <Content Include="CSS\bootstrap-responsive.min.css" />
@@ -273,6 +258,9 @@
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Product\Index.cshtml" />
     <Content Include="Views\Product\_Product.cshtml" />
+    <Content Include="Views\Product\Create.cshtml" />
+    <Content Include="Views\Product\Delete.cshtml" />
+    <Content Include="Views\Product\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -284,20 +272,6 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201406061215530_InitialCreate.resx">
-      <DependentUpon>201406061215530_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201406100700141_category.resx">
-      <DependentUpon>201406100700141_category.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201406100700395_product.resx">
-      <DependentUpon>201406100700395_product.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201406121316244_Id.resx">
-      <DependentUpon>201406121316244_Id.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

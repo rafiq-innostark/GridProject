@@ -68,3 +68,12 @@ input[type="checkbox"].input-validation-error {
     width: 24px;
     background-image: url('Images/delete.png');	
 }
+
+.edit
+{
+    display: inline-block;
+    height: 24px;    
+    vertical-align: middle;
+    width: 36px;
+    background-image: url('Images/edit.png');	
+}

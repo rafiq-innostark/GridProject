@@ -45,19 +45,25 @@
 
                 </td>
                 <td>
-                    @{
-
-                    }
+                   
                     @Html.DisplayFor(modelItem => item.Price).0
                 </td>
                 <td>
-                    @*@Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
-                        @Html.ActionLink("Details", "Details", new { id = item.ID }) |*@
-                    @Html.ActionLink(".", "Delete", new { id = item.Id }, new { @class = "delete" })
+                    @Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "edit" }) |
+                        @*@Html.ActionLink("Details", "Details", new { id = item.ID }) |*@
+                    @Html.ActionLink(" ", "Delete", new { id = item.Id }, new { @class = "delete" })
 
                 </td>
             </tr>
         }
+        <tfoot id="footer">
+            <tr>
+                <td></td>
+                <td></td>
+                <td>Total Price: @ViewBag.totalPrice.0</td>
+                <td></td>
+            </tr>
+        </tfoot>
 
     </table>
     <br />

@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using MSIdentity.Models;
@@ -11,13 +14,13 @@ namespace MSIdentity.Controllers
     public class ProductController : Controller
     {
         ApplicationDbContext db = new ApplicationDbContext();
-        public ActionResult Index(int? pageSize, string sortOrder, string currentFilter, string searchString, int? page, int? categoryId, int sortBy = 1, bool isAsc = true)
+        public ActionResult Index(int? pageSize, string currentFilter, string searchString, int? page, int? categoryId, int sortBy = 1, bool isAsc = true)
         {
 
-            ViewBag.CurrentSort = sortOrder;
-            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            ViewBag.DescriptionSortParm = String.IsNullOrEmpty(sortOrder) ? "description_desc" : "";
-            ViewBag.PriceSortParm = String.IsNullOrEmpty(sortOrder) ? "price_desc" : "";
+            //ViewBag.CurrentSort = sortOrder;
+            //ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            //ViewBag.DescriptionSortParm = String.IsNullOrEmpty(sortOrder) ? "description_desc" : "";
+            //ViewBag.PriceSortParm = String.IsNullOrEmpty(sortOrder) ? "price_desc" : "";
 
             var query = db.Categories.Select(c => new { c.Id, c.Name });
             ViewBag.Categories = new SelectList(query.AsEnumerable(), "Id", "Name");
@@ -70,6 +73,7 @@ namespace MSIdentity.Controllers
                 defaultPageSize = (int)pageSize;
             }
             ViewBag.pageSize = defaultPageSize;
+            ViewBag.totalPrice = products.Select(x => x.Price).Sum();
             int pageNumber = (page ?? 1);
             if (Request.IsAjaxRequest())
             {
@@ -84,59 +88,97 @@ namespace MSIdentity.Controllers
             return View();
         }
 
-        //
-        // GET: /Product/Create
+          [HttpGet]
         public ActionResult Create()
         {
+            PopulateCategoryDropDownList();
             return View();
         }
-
-        //
-        // POST: /Product/Create
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        [ValidateAntiForgeryToken]
+        // GET: /Product/Create
+        public ActionResult Create([Bind(Include = "CategoryId,Name, Description, Price")]Product product)
         {
+           
+
             try
             {
-                // TODO: Add insert logic here
-
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                   
+                    db.Products.Add(product);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
-            catch
+            catch (RetryLimitExceededException /* dex */)
             {
-                return View();
+                //Log the error (uncomment dex variable name and add a line here to write a log.
+                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
+          
+            return View(product);
         }
-
-        //
-        // GET: /Product/Edit/5
-        public ActionResult Edit(int id)
+        private void PopulateCategoryDropDownList()
         {
-            return View();
+            var query = db.Categories.Select(c => new { c.Id, c.Name });
+            ViewBag.Categories = new SelectList(query.AsEnumerable(), "Id", "Name");
+        } 
+            //
+        // GET: /Product/Edit/5
+        public ActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Product product = db.Products.Find(id);
+            if (product == null)
+            {
+                return HttpNotFound();
+            }
+            PopulateCategoryDropDownList();
+            return View(product);
         }
 
         //
         // POST: /Product/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Edit([Bind(Include = "Id,CategoryId,Name, Description, Price")]Product product)
         {
             try
             {
-                // TODO: Add update logic here
-
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Entry(product).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
-            catch
+            catch (RetryLimitExceededException /* dex */)
             {
-                return View();
+                //Log the error (uncomment dex variable name and add a line here to write a log.)
+                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
             }
+
+            return View(product);
         }
 
         //
         // GET: /Product/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Product product = db.Products.Find(id);
+            if (product == null)
+            {
+                return HttpNotFound();
+            }
+            return View(product);
+           
         }
 
         //
@@ -146,7 +188,9 @@ namespace MSIdentity.Controllers
         {
             try
             {
-                // TODO: Add delete logic here
+                Product product = db.Products.Find(id);
+                db.Products.Remove(product);
+                db.SaveChanges();
 
                 return RedirectToAction("Index");
             }
