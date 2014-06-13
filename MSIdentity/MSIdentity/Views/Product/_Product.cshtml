@@ -2,12 +2,12 @@
 @using PagedList.Mvc;
 
 <script src="~/Scripts/jquery-1.10.2.min.js"></script>
-<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+@*<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>*@
 <script src="~/Scripts/architecture.js"></script>
 <link href="~/Content/architecture.css" rel="stylesheet" />
 @helper SortLink(string name, int id)
 { @Ajax.ActionLink(name, "Index",
-                                     new { sortby = id, isasc = (id == ViewBag.sortBy ? (!@ViewBag.isAsc).ToString().ToLower() : true) },
+                        new { sortby = id, isasc = (id == ViewBag.sortBy ? (!@ViewBag.isAsc).ToString().ToLower() : true), @ViewBag.CategoryId },
                         new AjaxOptions
 
                         {
@@ -24,7 +24,7 @@
     }
 
 }
-<div id="gridContent" >
+<div id="gridContent">
     <table class="grid-content-table">
         <tr>
             <th> @SortLink("Name", 1) </th>
@@ -45,12 +45,12 @@
 
                 </td>
                 <td>
-                   
+
                     @Html.DisplayFor(modelItem => item.Price).0
                 </td>
                 <td>
                     @Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "edit" }) |
-                        @*@Html.ActionLink("Details", "Details", new { id = item.ID }) |*@
+                    @*@Html.ActionLink("Details", "Details", new { id = item.ID }) |*@
                     @Html.ActionLink(" ", "Delete", new { id = item.Id }, new { @class = "delete" })
 
                 </td>
@@ -60,7 +60,7 @@
             <tr>
                 <td></td>
                 <td></td>
-                <td>Total Price: @ViewBag.totalPrice.0</td>
+                <td>Total Price: @ViewBag.totalPrice</td>
                 <td></td>
             </tr>
         </tfoot>
@@ -69,12 +69,12 @@
     <br />
     <div id="myPager">
 
-        <table id="pager-table" >
+        <table id="pager-table">
             <tr>
                 <td style="width: 25%">Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount</td>
                 <td style="width: 50%">
                     @Html.PagedListPager(Model, page => Url.Action("Index",
-                        new { page }))
+                                                   new { page, @ViewBag.sortBy, @ViewBag.isAsc, @ViewBag.CategoryId }))
                 </td>
                 <td>
 
@@ -87,7 +87,7 @@
                     </select>
 
                 </td>
-                <td >
+                <td>
                     @using (Ajax.BeginForm("Index", "Product", new AjaxOptions { HttpMethod = "Get", InsertionMode = InsertionMode.Replace, UpdateTargetId = "gridContent" }))
                     {
 
