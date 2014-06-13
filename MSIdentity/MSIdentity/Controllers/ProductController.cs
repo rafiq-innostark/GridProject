@@ -63,8 +63,7 @@ namespace MSIdentity.Controllers
             ViewBag.IsAsc = isAsc;
 
             ViewBag.TotalNoOfRec = products.Count();
-            //products = products.OrderByDescending(s => s.Name);
-
+           
             int defaultPageSize = 3;
             if (pageSize != null)
             {
@@ -79,50 +78,6 @@ namespace MSIdentity.Controllers
             return View(products.ToPagedList(pageNumber, defaultPageSize));
         }
 
-        //
-        // GET: /Product/
-        //public ActionResult Index(FormCollection form, int? page, string sort, string sortdir)
-        //{
-        //    //ApplicationDbContext obj = new ApplicationDbContext();
-        //    //var categoryId = form["Id"];
-        //    //var searchData = form["Search_Data"];
-        //    //var a = form["X-Requested-With"];
-        //    //var query = obj.Categories.Select(c => new { c.Id, c.Name });
-        //    //ViewBag.Categories = new SelectList(query.AsEnumerable(), "Id", "Name");
-        //    //IEnumerable<Product> model = null;
-        //    //if (sort == "Name")
-        //    //{
-        //    //    model = obj.Products.Where(x => x.CategoryId == categoryId && x.Name.Contains(searchData)).OrderBy(x => x.Name);
-        //    //    return PartialView(model);
-        //    //}
-        //    //else if (sort == "Description")
-        //    //{
-        //    //    model = obj.Products.Where(x => x.CategoryId == categoryId && x.Name.Contains(searchData)).OrderBy(x => x.Description);
-        //    //    return PartialView(model);
-        //    //}
-        //    //else if (sort == "Price")
-        //    //{
-        //    //    model = obj.Products.Where(x => x.CategoryId == categoryId && x.Name.Contains(searchData)).OrderBy(x => x.Price);
-        //    //    return PartialView(model);
-
-        //    //}
-
-        //    //else
-        //    //{
-
-        //    //    model =
-        //    //        obj.Products.Where(x => x.CategoryId == categoryId && x.Name.Contains(searchData))
-        //    //            .OrderBy(x => x.Name);
-        //    //    return PartialView(model);
-
-        //    //}
-
-        //    return View();
-
-        //}
-
-        ////
-        // GET: /Product/Details/5
         public ActionResult Details()
         {
 

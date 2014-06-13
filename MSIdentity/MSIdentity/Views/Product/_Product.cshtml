@@ -1,39 +1,10 @@
 ﻿@model PagedList.IPagedList<MSIdentity.Models.Product>
 @using PagedList.Mvc;
 
-<script type="text/javascript">
-    $(function () {
-        $('#myPager').on('click', 'a', function () {
-            $.ajax({
-                url: this.href,
-                type: 'GET',
-                cache: false,
-                success: function (result) {
-                    $('#gridContent').html(result);
-                }
-            });
-            return false;
-        });
-    });
-    $(function () {
-        $("#NumSelected").change(function () {
-            var url = '/Product/Index/?' + "pageSize=" + $("#NumSelected").val();
-              $.ajax({
-                  url: url,
-                type: 'GET',
-                 cache: false,
-                 success: function (result) {
-                     $('#gridContent').html(result);
-                     $('#NumSelected').val(@ViewBag.pageSize);
-
-
-                }
-            });
-
-        });
-    });
-</script>
-
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/Scripts/architecture.js"></script>
+<link href="~/Content/architecture.css" rel="stylesheet" />
 @helper SortLink(string name, int id)
 { @Ajax.ActionLink(name, "Index",
                                      new { sortby = id, isasc = (id == ViewBag.sortBy ? (!@ViewBag.isAsc).ToString().ToLower() : true) },
@@ -53,8 +24,8 @@
     }
 
 }
-<div id="gridContent" style="margin-left: 10px;margin-right: 10px;margin-top: 7px;">
-    <table class="table">
+<div id="gridContent" >
+    <table class="grid-content-table">
         <tr>
             <th> @SortLink("Name", 1) </th>
             <th> @SortLink("Description", 2)  </th>
@@ -83,7 +54,7 @@
                     @*@Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
                         @Html.ActionLink("Details", "Details", new { id = item.ID }) |*@
                     @Html.ActionLink(".", "Delete", new { id = item.Id }, new { @class = "delete" })
-                   
+
                 </td>
             </tr>
         }
@@ -92,7 +63,7 @@
     <br />
     <div id="myPager">
 
-        <table style="width: 100%;">
+        <table id="pager-table" >
             <tr>
                 <td style="width: 25%">Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount</td>
                 <td style="width: 50%">
@@ -110,7 +81,7 @@
                     </select>
 
                 </td>
-                <td style="text-align: left">
+                <td >
                     @using (Ajax.BeginForm("Index", "Product", new AjaxOptions { HttpMethod = "Get", InsertionMode = InsertionMode.Replace, UpdateTargetId = "gridContent" }))
                     {
 
@@ -125,10 +96,3 @@
     </div>
 </div>
 
-@section scripts{
-
-    @Scripts.Render("~/Scripts/jquery-1.10.2.min.js")
-    @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")
-
-
-}

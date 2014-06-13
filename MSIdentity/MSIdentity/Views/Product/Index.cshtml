@@ -2,26 +2,25 @@
 @using PagedList.Mvc;
 
 
-<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
 
 @Styles.Render("~/Content/PagedList.css")
 @Styles.Render("~/Content/Site.css")
-<style>
-    .table {
-        border: 1px solid black;
-    }
+<head>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/Scripts/architecture.js"></script>
+ 
 
-    td {
-        height: 40px;
-    }
-</style>
+</head>
+
 
 @{
     ViewBag.Title = "Products";
 }
 
 
-<div id="main" style="border-style: solid; border-width: 1px; margin-top:20px;">
+<div id="search-area" >
     <div style="margin-left: 10px;">
         <p>
             @*@Html.ActionLink("Create New", "Create")*@
@@ -39,16 +38,19 @@
     </div>
 </div>
 <br />
-<div style="border-style: solid; border-width: 1px; margin-top:10px;">
-    <p style="margin-left: 10px;margin-top: 15px;">Total Number of records: @ViewBag.TotalNoOfRec</p>
+<div id="grid-area">
+    <p >Total Number of records: @ViewBag.TotalNoOfRec</p>
     <br />
     @Html.Partial("_Product",Model)
 </div>
 
 @section scripts{
 
-    @Scripts.Render("~/Scripts/jquery-1.10.2.min.js")
+    @*@Scripts.Render("~/Scripts/jquery-1.10.2.min.js")
     @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")
+    @Scripts.Render("~/Scripts/architecture.js")*@
+
+
 
 
 }

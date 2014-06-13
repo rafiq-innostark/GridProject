@@ -1,0 +1,58 @@
+﻿
+.grid-content-table {
+    border: 1px solid black;
+    width: 100%;
+}
+
+    .grid-content-table td {
+        height: 10px;
+        padding: 3px;
+        border: #4e95f4 1px solid;
+    }
+
+    /* provide some minimal visual accomodation for IE8 and below */
+    .grid-content-table tr {
+        background: #b8d1f3;
+        height: 10px;
+         font-size: 0.9em;
+    }
+        /*  Define the background color for all the ODD background rows  */
+        .grid-content-table tr:nth-child(odd) {
+            background: #b8d1f3;
+        }
+        /*  Define the background color for all the EVEN background rows  */
+        .grid-content-table tr:nth-child(even) {
+            background: #dae5f4;
+        }
+
+        .grid-content-table tr:hover {
+            background-color: lightyellow;
+            cursor: pointer;
+        }
+
+#search-area {
+    border-style: solid;
+    border-width: 1px;
+    margin-top: 20px;
+}
+
+#grid-area {
+    border-style: solid;
+    border-width: 1px;
+    margin-top: 10px;
+}
+
+    #grid-area p {
+        margin-left: 10px;
+        margin-top: 15px;
+    }
+
+#gridContent {
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 7px;
+}
+
+#pager-table {
+    width: 100%;
+}
