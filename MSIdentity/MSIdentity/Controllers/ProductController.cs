@@ -14,72 +14,67 @@ namespace MSIdentity.Controllers
     public class ProductController : Controller
     {
         ApplicationDbContext db = new ApplicationDbContext();
-        public ActionResult Index(int? pageSize, string currentFilter, string searchString, int? page, int? categoryId, int sortBy = 1, bool isAsc = true)
+
+        public ActionResult Index(SearchRequestModel request)
         {
 
-            //ViewBag.CurrentSort = sortOrder;
-            //ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            //ViewBag.DescriptionSortParm = String.IsNullOrEmpty(sortOrder) ? "description_desc" : "";
-            //ViewBag.PriceSortParm = String.IsNullOrEmpty(sortOrder) ? "price_desc" : "";
+            if (request.CategoryId == null && request.SearchString == null && request.SortBy == 0)
+            {
+                request.IsAsc = true;
+                request.SortBy = 1;
+                request.PageNo = 1;
+            }
 
             var query = db.Categories.Select(c => new { c.Id, c.Name });
-            ViewBag.Categories = new SelectList(query.AsEnumerable(), "Id", "Name");
-            if (searchString != null)
+            var products = db.Products.Select(x => x); ;
+
+            if (request.CategoryId != null || !String.IsNullOrEmpty(request.SearchString))
             {
-                page = 1;
-            }
-            else
-            {
-                searchString = currentFilter;
+                products = products.Where(s => s.CategoryId == request.CategoryId || s.Name.Contains(request.SearchString));
             }
 
-            ViewBag.CurrentFilter = searchString;
 
-            var products = from s in db.Products
-                           select s;
-            //if (!String.IsNullOrEmpty(searchString) && !String.IsNullOrEmpty(categoryId))
-            //{
-            //    products = products.Where(s => s.Name.ToUpper().Contains(searchString.ToUpper())
-            //                           && s.CategoryId == categoryId);
-            //}  
-            if (categoryId != null)
-            {
-                products = products.Where(s => s.CategoryId == categoryId);
-            }
             #region Sorting
-            switch (sortBy)
+            switch (request.SortBy)
             {
                 case 1:
-                    products = isAsc ? products.OrderBy(p => p.Name) : products.OrderByDescending(p => p.Name);
+                    products = request.IsAsc ? products.OrderBy(p => p.Name) : products.OrderByDescending(p => p.Name);
                     break;
 
                 case 2:
-                    products = isAsc ? products.OrderBy(p => p.Description) : products.OrderByDescending(p => p.Description);
+                    products = request.IsAsc ? products.OrderBy(p => p.Description) : products.OrderByDescending(p => p.Description);
                     break;
 
                 default:
-                    products = isAsc ? products.OrderBy(p => p.Price) : products.OrderByDescending(p => p.Price);
+                    products = request.IsAsc ? products.OrderBy(p => p.Price) : products.OrderByDescending(p => p.Price);
                     break;
             }
             #endregion
-            ViewBag.SortBy = sortBy;
-            ViewBag.IsAsc = isAsc;
-
-            ViewBag.TotalNoOfRec = products.Count();
-           
             int defaultPageSize = 3;
-            if (pageSize != null)
+            if (request.PageSize != null)
             {
-                defaultPageSize = (int)pageSize;
+                defaultPageSize = (int)request.PageSize;
             }
-            ViewBag.pageSize = defaultPageSize;
-            ViewBag.totalPrice = products.Select(x => x.Price).Sum();
-            int pageNumber = (page ?? 1);
+            int pageNumber = (request.PageNo ?? 1);
+                            
+           
+            ProductViewModel productViewModel = new ProductViewModel()
+            {
+                ProductList = products.ToPagedList(pageNumber, defaultPageSize),
+                Categories = new SelectList(query.AsEnumerable(), "Id", "Name"),
+                TotalPrice = products.Select(x => x.Price).Sum(),
+                TotalNoOfRec = products.Count(),
+                SearchRequestModel = request,
+              
+
+            };
+
             if (Request.IsAjaxRequest())
             {
-                return PartialView("_Product", products.ToPagedList(pageNumber, defaultPageSize));
+                return PartialView("_Product", productViewModel);
             }
-            return View(products.ToPagedList(pageNumber, defaultPageSize));
+
+            return View(productViewModel);
         }
 
         public ActionResult Details()
@@ -88,7 +83,7 @@ namespace MSIdentity.Controllers
             return View();
         }
 
-          [HttpGet]
+        [HttpGet]
         public ActionResult Create()
         {
             PopulateCategoryDropDownList();
@@ -99,13 +94,13 @@ namespace MSIdentity.Controllers
         // GET: /Product/Create
         public ActionResult Create([Bind(Include = "CategoryId,Name, Description, Price")]Product product)
         {
-           
+
 
             try
             {
                 if (ModelState.IsValid)
                 {
-                   
+
                     db.Products.Add(product);
                     db.SaveChanges();
                     return RedirectToAction("Index");
@@ -116,15 +111,15 @@ namespace MSIdentity.Controllers
                 //Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
-          
+
             return View(product);
         }
         private void PopulateCategoryDropDownList()
         {
             var query = db.Categories.Select(c => new { c.Id, c.Name });
             ViewBag.Categories = new SelectList(query.AsEnumerable(), "Id", "Name");
-        } 
-            //
+        }
+        //
         // GET: /Product/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -178,7 +173,7 @@ namespace MSIdentity.Controllers
                 return HttpNotFound();
             }
             return View(product);
-           
+
         }
 
         //

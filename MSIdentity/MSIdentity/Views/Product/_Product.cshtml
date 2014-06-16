@@ -1,30 +1,38 @@
-﻿@model PagedList.IPagedList<MSIdentity.Models.Product>
+﻿@model MSIdentity.Models.ProductViewModel
+@*@model PagedList.IPagedList<MSIdentity.Models.Product>*@
 @using PagedList.Mvc;
 
-<script src="~/Scripts/jquery-1.10.2.min.js"></script>
-@*<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>*@
-<script src="~/Scripts/architecture.js"></script>
+<head>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/Scripts/architecture.js"></script>
+</head>
 <link href="~/Content/architecture.css" rel="stylesheet" />
 @helper SortLink(string name, int id)
-{ @Ajax.ActionLink(name, "Index",
-                        new { sortby = id, isasc = (id == ViewBag.sortBy ? (!@ViewBag.isAsc).ToString().ToLower() : true), @ViewBag.CategoryId },
-                        new AjaxOptions
+{
+    @Ajax.ActionLink(name, "Index",
+        new { Sortby = id, isasc = (id != @Model.SearchRequestModel.SortBy || (!@Model.SearchRequestModel.IsAsc)), @Model.SearchRequestModel.CategoryId },
+        new AjaxOptions
 
-                        {
-                            UpdateTargetId = "gridContent", // <-- DOM element ID to update
+        {
+            UpdateTargetId = "gridContent", // <-- DOM element ID to update
 
-                            InsertionMode = InsertionMode.Replace, // <-- Replace the content of DOM element
+            InsertionMode = InsertionMode.Replace, // <-- Replace the content of DOM element
 
-                            HttpMethod = "GET", // <-- HTTP method
+            HttpMethod = "GET", // <-- HTTP method
 
-                        })
-    if (id == ViewBag.sortBy)
+        })
+    if (id == @Model.SearchRequestModel.SortBy)
     {
-        <span class="arrow @(ViewBag.isAsc ? "up" : "down")"></span>
+        <span class="arrow @(@Model.SearchRequestModel.IsAsc ? "up" : "down")"></span>
     }
 
 }
 <div id="gridContent">
+    <p>Total Number of records: @Model.TotalNoOfRec</p>
+    <br />
+    <input type="hidden" name="SortBy" value="@Model.SearchRequestModel.SortBy" />
+    <input type="hidden" name="PageSize" value="@Model.SearchRequestModel.PageSize" />
     <table class="grid-content-table">
         <tr>
             <th> @SortLink("Name", 1) </th>
@@ -34,7 +42,7 @@
         </tr>
 
 
-        @foreach (var item in Model)
+        @foreach (var item in Model.ProductList)
         {
             <tr>
                 <td>
@@ -60,7 +68,7 @@
             <tr>
                 <td></td>
                 <td></td>
-                <td>Total Price: @ViewBag.totalPrice</td>
+                <td>Total Price: @Model.TotalPrice</td>
                 <td></td>
             </tr>
         </tfoot>
@@ -68,23 +76,32 @@
     </table>
     <br />
     <div id="myPager">
-
+        @*<input type="hidden" name="myHiddenInput" id="myHiddenInput" value="@ViewBag.SortBy" />*@
         <table id="pager-table">
             <tr>
-                <td style="width: 25%">Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount</td>
+                <td style="width: 25%">Page @(Model.ProductList.PageCount < Model.ProductList.PageNumber ? 0 : Model.ProductList.PageNumber) of @Model.ProductList.PageCount</td>
                 <td style="width: 50%">
-                    @Html.PagedListPager(Model, page => Url.Action("Index",
-                                                   new { page, @ViewBag.sortBy, @ViewBag.isAsc, @ViewBag.CategoryId }))
+                    @Html.PagedListPager(Model.ProductList, PageNo => Url.Action("Index",
+                        new { PageNo, @Model.SearchRequestModel.SortBy, @Model.SearchRequestModel.IsAsc, @Model.SearchRequestModel.CategoryId }))
                 </td>
                 <td>
-
-
-                    <select id="NumSelected" name="NumSelected">
-                        @for (var i = 0; i <= 20; i++)
+                    @Model.SearchRequestModel.PageSize
+                         @Html.DropDownList("NumSelected", new List<SelectListItem>
                         {
-                            <option value="@i">@i</option>
-                        }.
-                    </select>
+                        new SelectListItem{Text="5",Value="5"},
+                        new SelectListItem{Text="10",Value="10"},
+                        new SelectListItem{Text="15",Value="15"},
+                        new SelectListItem{Text="20",Value="20"}
+                        },@Model.SearchRequestModel.PageSize)  
+
+                    @*<select id="NumSelected" name="NumSelected">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                        <option value="25">25</option>
+
+                    </select>*@
 
                 </td>
                 <td>
@@ -92,7 +109,7 @@
                     {
 
                         <p>
-                            @Html.TextBox("page", ViewBag.CurrentFilter as string, null, new { style = "width:40px" })\@Model.PageCount
+                            @Html.TextBox("PageNo", ViewBag.CurrentFilter as string, null, new { style = "width:40px" })\@Model.ProductList.PageCount
                         </p>
 
                     }
@@ -101,4 +118,10 @@
         </table>
     </div>
 </div>
+@*@section scripts{
 
+        @Scripts.Render("~/Scripts/jquery-1.10.2.min.js")
+        @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")
+        @Scripts.Render("~/Scripts/architecture.js")
+
+    }*@

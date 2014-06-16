@@ -14,31 +14,32 @@
     .grid-content-table tr {
         background: #b8d1f3;
         height: 10px;
-         font-size: 0.9em;
+        font-size: 0.9em;
     }
-      .grid-content-table th {
+
+    .grid-content-table th {
         background: yellow;
         height: 10px;
-         font-size: 0.9em;
+        font-size: 0.9em;
     }
-        /*  Define the background color for all the ODD background rows  */
-        .grid-content-table tr:nth-child(odd) {
-            background: #b8d1f3;
-        }
-        /*  Define the background color for all the EVEN background rows  */
-        .grid-content-table tr:nth-child(even) {
-            background: #dae5f4;
-        }
+    /*  Define the background color for all the ODD background rows  */
+    .grid-content-table tr:nth-child(odd) {
+        background: #b8d1f3;
+    }
+    /*  Define the background color for all the EVEN background rows  */
+    .grid-content-table tr:nth-child(even) {
+        background: #dae5f4;
+    }
 
-        .grid-content-table tr:hover {
-            background-color: lightyellow;
-            cursor: pointer;
-        }
-          #footer tr{
-            background-color: antiquewhite;
-            cursor: default;
-           
-        }
+    .grid-content-table tr:hover {
+        background-color: lightyellow;
+        cursor: pointer;
+    }
+
+#footer tr {
+    background-color: antiquewhite;
+    cursor: default;
+}
 
 #search-area {
     border-style: solid;
