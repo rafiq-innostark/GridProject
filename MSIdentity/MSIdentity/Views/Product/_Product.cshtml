@@ -2,16 +2,13 @@
 @*@model PagedList.IPagedList<MSIdentity.Models.Product>*@
 @using PagedList.Mvc;
 
-<head>
-    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
-    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
-    <script src="~/Scripts/architecture.js"></script>
-</head>
+
 <link href="~/Content/architecture.css" rel="stylesheet" />
+
 @helper SortLink(string name, int id)
 {
     @Ajax.ActionLink(name, "Index",
-        new { Sortby = id, isasc = (id != @Model.SearchRequestModel.SortBy || (!@Model.SearchRequestModel.IsAsc)), @Model.SearchRequestModel.CategoryId },
+        new { Sortby = id, isasc = (id != @Model.SearchRequestModel.SortBy || (!@Model.SearchRequestModel.IsAsc)), @Model.SearchRequestModel.CategoryId, @Model.SearchRequestModel.PageSize },
         new AjaxOptions
 
         {
@@ -31,8 +28,12 @@
 <div id="gridContent">
     <p>Total Number of records: @Model.TotalNoOfRec</p>
     <br />
-    <input type="hidden" name="SortBy" value="@Model.SearchRequestModel.SortBy" />
-    <input type="hidden" name="PageSize" value="@Model.SearchRequestModel.PageSize" />
+    <input type="hidden" id="SortBy" name="SortBy" value="@Model.SearchRequestModel.SortBy" />
+    <input type="hidden" id="CategoryId" name="CategoryId" value="@Model.SearchRequestModel.CategoryId" />
+    <input type="hidden" id="IsAsc" name="IsAsc" value="@Model.SearchRequestModel.IsAsc" />
+    <input type="hidden" id="PageSize" name="PageSize" value="@Model.SearchRequestModel.PageSize" />
+    <input type="hidden" id="PageCount" name="PageCount" value="@Model.ProductList.PageCount" />
+    
     <table class="grid-content-table">
         <tr>
             <th> @SortLink("Name", 1) </th>
@@ -81,47 +82,37 @@
             <tr>
                 <td style="width: 25%">Page @(Model.ProductList.PageCount < Model.ProductList.PageNumber ? 0 : Model.ProductList.PageNumber) of @Model.ProductList.PageCount</td>
                 <td style="width: 50%">
-                    @Html.PagedListPager(Model.ProductList, PageNo => Url.Action("Index",
-                        new { PageNo, @Model.SearchRequestModel.SortBy, @Model.SearchRequestModel.IsAsc, @Model.SearchRequestModel.CategoryId }))
+                    @Html.PagedListPager(Model.ProductList, PageNo => Url.Action("Index", new { PageNo, @Model.SearchRequestModel.SortBy, @Model.SearchRequestModel.IsAsc, @Model.SearchRequestModel.CategoryId,@Model.SearchRequestModel.PageSize }),
+                        PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "gridContent" })
+                        )
+                    @*@Html.PagedListPager(Model.ProductList, PageNo => Url.Action("Index",
+                        new { PageNo, @Model.SearchRequestModel.SortBy, @Model.SearchRequestModel.IsAsc, @Model.SearchRequestModel.CategoryId }))*@
                 </td>
                 <td>
-                    @Model.SearchRequestModel.PageSize
-                         @Html.DropDownList("NumSelected", new List<SelectListItem>
-                        {
+                    @Html.DropDownListFor(m => m.SearchRequestModel.PageSize, new List<SelectListItem>
+                    {
                         new SelectListItem{Text="5",Value="5"},
                         new SelectListItem{Text="10",Value="10"},
                         new SelectListItem{Text="15",Value="15"},
                         new SelectListItem{Text="20",Value="20"}
-                        },@Model.SearchRequestModel.PageSize)  
+                    })
 
-                    @*<select id="NumSelected" name="NumSelected">
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="15">15</option>
-                        <option value="20">20</option>
-                        <option value="25">25</option>
-
-                    </select>*@
 
                 </td>
                 <td>
-                    @using (Ajax.BeginForm("Index", "Product", new AjaxOptions { HttpMethod = "Get", InsertionMode = InsertionMode.Replace, UpdateTargetId = "gridContent" }))
-                    {
+                 
 
                         <p>
-                            @Html.TextBox("PageNo", ViewBag.CurrentFilter as string, null, new { style = "width:40px" })\@Model.ProductList.PageCount
+                            @Html.TextBox("PageNo", ViewBag.CurrentFilter as string, null, new { style = "width:40px" ,id="UserPageInput"})\@Model.ProductList.PageCount
                         </p>
 
-                    }
+                   
                 </td>
             </tr>
         </table>
     </div>
+    <script>
+        InitializePage();
+    </script>
 </div>
-@*@section scripts{
 
-        @Scripts.Render("~/Scripts/jquery-1.10.2.min.js")
-        @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")
-        @Scripts.Render("~/Scripts/architecture.js")
-
-    }*@

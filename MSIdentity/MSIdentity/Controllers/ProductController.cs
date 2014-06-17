@@ -15,6 +15,12 @@ namespace MSIdentity.Controllers
     {
         ApplicationDbContext db = new ApplicationDbContext();
 
+        // <summary> 
+        // PageSize: number of records to be displayed
+        // PageNo: current page index
+        // SortBy: column number
+        // IsAsc: direction of sort 
+        //</summary> 
         public ActionResult Index(SearchRequestModel request)
         {
 
@@ -24,9 +30,17 @@ namespace MSIdentity.Controllers
                 request.SortBy = 1;
                 request.PageNo = 1;
             }
-
+            // the number of records(rows) that to be diplayed
+            int defaultPageSize = 3;
+            if (request.PageSize != null)
+            {
+                defaultPageSize = (int)request.PageSize;
+            }
+            int pageNumber = (request.PageNo ?? 1);
             var query = db.Categories.Select(c => new { c.Id, c.Name });
-            var products = db.Products.Select(x => x); ;
+            //var products = db.Products.Where(s => ((request.CategoryId != null && s.CategoryId == request.CategoryId) && (!String.IsNullOrEmpty(request.SearchString) &&
+            //  s.Name.Contains(request.SearchString))));
+            var products = db.Products.Select(x => x); 
 
             if (request.CategoryId != null || !String.IsNullOrEmpty(request.SearchString))
             {
@@ -50,14 +64,10 @@ namespace MSIdentity.Controllers
                     break;
             }
             #endregion
-            int defaultPageSize = 3;
-            if (request.PageSize != null)
-            {
-                defaultPageSize = (int)request.PageSize;
-            }
-            int pageNumber = (request.PageNo ?? 1);
-                            
-           
+
+
+
+
             ProductViewModel productViewModel = new ProductViewModel()
             {
                 ProductList = products.ToPagedList(pageNumber, defaultPageSize),
@@ -65,7 +75,7 @@ namespace MSIdentity.Controllers
                 TotalPrice = products.Select(x => x.Price).Sum(),
                 TotalNoOfRec = products.Count(),
                 SearchRequestModel = request,
-              
+
 
             };
 

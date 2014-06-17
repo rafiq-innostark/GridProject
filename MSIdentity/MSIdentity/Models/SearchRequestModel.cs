@@ -7,7 +7,7 @@ namespace MSIdentity.Models
 {
     public class SearchRequestModel
     {
-        //user select page size
+        //user select page size or number of records to be displayed
         public int? PageSize { get; set; }
         public string SearchString { get; set; }
         //current page no.

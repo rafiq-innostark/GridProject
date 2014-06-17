@@ -13,5 +13,7 @@ namespace MSIdentity.Models
         public SelectList Categories { get; set; }
         public int? TotalPrice { get; set; }
         public int? TotalNoOfRec{ get; set; }
+        public SearchRequestModel SearchRequestModel { get; set; }
+     
     }
 }

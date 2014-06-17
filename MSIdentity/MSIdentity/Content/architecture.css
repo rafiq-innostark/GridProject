@@ -30,7 +30,9 @@
     .grid-content-table tr:nth-child(even) {
         background: #dae5f4;
     }
-
+    .grid-content-table td {
+        width: 30%;
+    }
     .grid-content-table tr:hover {
         background-color: lightyellow;
         cursor: pointer;
