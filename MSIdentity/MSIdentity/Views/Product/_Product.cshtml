@@ -2,8 +2,8 @@
 @*@model PagedList.IPagedList<MSIdentity.Models.Product>*@
 @using PagedList.Mvc;
 
+@Html.AntiForgeryToken()
 
-<link href="~/Content/architecture.css" rel="stylesheet" />
 
 @helper SortLink(string name, int id)
 {
@@ -25,6 +25,8 @@
     }
 
 }
+
+
 <div id="gridContent">
     <p>Total Number of records: @Model.TotalNoOfRec</p>
     <br />
@@ -33,13 +35,14 @@
     <input type="hidden" id="IsAsc" name="IsAsc" value="@Model.SearchRequestModel.IsAsc" />
     <input type="hidden" id="PageSize" name="PageSize" value="@Model.SearchRequestModel.PageSize" />
     <input type="hidden" id="PageCount" name="PageCount" value="@Model.ProductList.PageCount" />
+    <input type="hidden" id="DeleteItemId" name="DeleteItemId" value="" />
     
     <table class="grid-content-table">
         <tr>
             <th> @SortLink("Name", 1) </th>
             <th> @SortLink("Description", 2)  </th>
             <th> @SortLink("Price", 3)</th>
-            <th> Delete</th>
+            <th> Edit/Delete</th>
         </tr>
 
 
@@ -58,10 +61,12 @@
                     @Html.DisplayFor(modelItem => item.Price).0
                 </td>
                 <td>
+                    
                     @Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "edit" }) |
-                    @*@Html.ActionLink("Details", "Details", new { id = item.ID }) |*@
-                    @Html.ActionLink(" ", "Delete", new { id = item.Id }, new { @class = "delete" })
-
+                    <a class="delete" href=""  data-delete-id="@item.Id"></a>
+                  
+                    @*<a class="delete" href="@Url.Action("Delete", new {id = item.Id})"></a>*@
+                   
                 </td>
             </tr>
         }
@@ -114,5 +119,9 @@
     <script>
         InitializePage();
     </script>
+  
 </div>
 
+@*<div id="delete-dialog" title="Confirmation">
+    <p>Are you sure you want to delete this Brand?</p>
+</div>*@

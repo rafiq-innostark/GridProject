@@ -17,5 +17,8 @@ namespace MSIdentity.Models
         public int SortBy { get; set; }
         //sort order
         public bool IsAsc { get; set; }
+        // delete item id
+        public int? Id { get; set; }
+
     }
 }

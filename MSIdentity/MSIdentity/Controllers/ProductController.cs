@@ -23,7 +23,19 @@ namespace MSIdentity.Controllers
         //</summary> 
         public ActionResult Index(SearchRequestModel request)
         {
+           
+            ProductViewModel productViewModel = FetchData(request);
 
+            if (Request.IsAjaxRequest())
+            {
+                return PartialView("_Product", productViewModel);
+            }
+
+            return View(productViewModel);
+        }
+
+        public ProductViewModel FetchData(SearchRequestModel request)
+        {
             if (request.CategoryId == null && request.SearchString == null && request.SortBy == 0)
             {
                 request.IsAsc = true;
@@ -40,8 +52,7 @@ namespace MSIdentity.Controllers
             var query = db.Categories.Select(c => new { c.Id, c.Name });
             //var products = db.Products.Where(s => ((request.CategoryId != null && s.CategoryId == request.CategoryId) && (!String.IsNullOrEmpty(request.SearchString) &&
             //  s.Name.Contains(request.SearchString))));
-            var products = db.Products.Select(x => x); 
-
+            var products = db.Products.Select(x => x);
             if (request.CategoryId != null || !String.IsNullOrEmpty(request.SearchString))
             {
                 products = products.Where(s => s.CategoryId == request.CategoryId || s.Name.Contains(request.SearchString));
@@ -78,13 +89,7 @@ namespace MSIdentity.Controllers
 
 
             };
-
-            if (Request.IsAjaxRequest())
-            {
-                return PartialView("_Product", productViewModel);
-            }
-
-            return View(productViewModel);
+            return productViewModel;
         }
 
         public ActionResult Details()
@@ -171,19 +176,29 @@ namespace MSIdentity.Controllers
 
         //
         // GET: /Product/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(SearchRequestModel request)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Product product = db.Products.Find(id);
-            if (product == null)
-            {
-                return HttpNotFound();
-            }
-            return View(product);
 
+            try
+            {
+                Product product = db.Products.Find(request.Id);
+                db.Products.Remove(product);
+                db.SaveChanges();
+                ProductViewModel productViewModel = FetchData(request);
+
+                if (Request.IsAjaxRequest())
+                {
+                    return PartialView("_Product", productViewModel);
+                }
+
+               
+               // return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View();
+            }
+            return null;
         }
 
         //

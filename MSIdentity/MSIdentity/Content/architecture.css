@@ -31,7 +31,7 @@
         background: #dae5f4;
     }
     .grid-content-table td {
-        width: 30%;
+        width: 28%;
     }
     .grid-content-table tr:hover {
         background-color: lightyellow;
@@ -69,3 +69,23 @@
 #pager-table {
     width: 100%;
 }
+
+div#spinner
+{
+    display: none;
+    width:95px;
+    height: 95px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    background:url(Images/spinner.gif) no-repeat center transparent;
+    text-align:center;
+    padding:10px;
+    font:normal 16px Tahoma, Geneva, sans-serif;
+    /*border:1px solid #666;*/
+    margin-left: -50px;
+    margin-top: -50px;
+    z-index:2;
+    overflow: auto;
+}
+

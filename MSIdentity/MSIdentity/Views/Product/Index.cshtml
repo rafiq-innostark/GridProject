@@ -4,11 +4,13 @@
 
 @Styles.Render("~/Content/PagedList.css")
 @Styles.Render("~/Content/Site.css")
+<link href="~/Content/architecture.css" rel="stylesheet" />
+<link href="~/Content/jquery-ui.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+<script src="~/Scripts/jquery-ui-1.10.2.js"></script>
 
-<script src="~/Scripts/jquery-1.10.2.min.js"></script>
 <script src="~/Scripts/architecture.js"></script>
-<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
-
 
 @{
     ViewBag.Title = "Products";
@@ -17,6 +19,13 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        Are you sure to delete?
+        <button id="yes">Yes</button><button id="no">No</button>
+    </p>
+</div>
 @using (Ajax.BeginForm
 
             ("Index", "Product",
