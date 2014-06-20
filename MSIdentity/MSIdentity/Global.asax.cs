@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using Interfaces.Main_Repositories;
 using Microsoft.Practices.Unity;
-using MSIdentity.MainRepositories;
-using MSIdentity.Repository;
-using Microsoft.Practices.Unity.Configuration;
-
-
+using Repository.Main_Repository;
+using Repository.Repository;
 
 
 namespace MSIdentity

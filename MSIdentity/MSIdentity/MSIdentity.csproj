@@ -209,25 +209,10 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="MainRepositories\CategoryRepository.cs" />
-    <Compile Include="MainRepositories\ICategoryRepository.cs" />
-    <Compile Include="MainRepositories\IProductRepository.cs" />
-    <Compile Include="MainRepositories\ProductRepository.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\Category.cs" />
-    <Compile Include="Models\IdentityModels.cs" />
-    <Compile Include="Models\OrderProductByColumn.cs" />
-    <Compile Include="Models\Product.cs" />
     <Compile Include="Models\ProductViewModel.cs" />
-    <Compile Include="Models\SearchRequestModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repository\BaseRepository.cs" />
-    <Compile Include="Repository\IBaseRepository.cs" />
-    <Compile Include="Repository\UnityControllerActivator.cs" />
-    <Compile Include="Repository\UnityDependencyResolver.cs" />
-    <Compile Include="Repository\UnityDependencyScope.cs" />
-    <Compile Include="Repository\UnityRegistrationCache.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -317,6 +302,20 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Interfaces\Interfaces.csproj">
+      <Project>{e397c5c8-94ae-4b8d-bb0e-15ca4f04334f}</Project>
+      <Name>Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Models\Models.csproj">
+      <Project>{2afec77c-3dfa-413f-b7c5-43bc05711f39}</Project>
+      <Name>Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Repository\Repository.csproj">
+      <Project>{b1f7e33c-ed01-4b46-a135-100cbc6ff3be}</Project>
+      <Name>Repository</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

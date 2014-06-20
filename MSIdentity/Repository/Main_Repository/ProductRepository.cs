@@ -2,15 +2,13 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Runtime.CompilerServices;
-using System.Web;
-using System.Web.UI.WebControls;
+using Interfaces.Main_Repositories;
 using Microsoft.Practices.Unity;
+using Models.Models;
 using MSIdentity.Models;
-using MSIdentity.Repository;
+using Repository.Repository;
 
-namespace MSIdentity.MainRepositories
+namespace Repository.Main_Repository
 {
     public sealed class ProductRepository : BaseRepository<Product>, IProductRepository
     {

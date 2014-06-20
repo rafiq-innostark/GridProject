@@ -82,14 +82,14 @@
                 <td></td>
                 <td>Total Price: @Model.TotalPrice</td>
                 <td></td>
+                <td></td>
             </tr>
         </tfoot>
 
     </table>
     <br />
     <div id="myPager">
-        @*<input type="hidden" name="myHiddenInput" id="myHiddenInput" value="@ViewBag.SortBy" />*@
-        <table id="pager-table">
+         <table id="pager-table">
             <tr>
                 <td style="width: 25%">Page @(Model.ProductList.PageCount < Model.ProductList.PageNumber ? 0 : Model.ProductList.PageNumber) of @Model.ProductList.PageCount</td>
                 <td style="width: 50%">

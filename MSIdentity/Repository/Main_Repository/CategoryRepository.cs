@@ -1,21 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Web;
+using Interfaces.Main_Repositories;
 using Microsoft.Practices.Unity;
+using Models.Models;
 using MSIdentity.Models;
-using MSIdentity.Repository;
+using Repository.Repository;
 
-namespace MSIdentity.MainRepositories
+namespace Repository.Main_Repository
 {
     public sealed class CategoryRepository : BaseRepository<Category>, ICategoryRepository
     {
         
 
         #region Constructor
-        ApplicationDbContext db = new ApplicationDbContext();
-        /// <summary>
+          /// <summary>
         /// Constructor
         /// </summary>
         public CategoryRepository(IUnityContainer container)

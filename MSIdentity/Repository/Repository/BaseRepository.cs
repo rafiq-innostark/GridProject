@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
-using System.Web;
+using Interfaces.Repository;
 using Microsoft.Practices.Unity;
-using MSIdentity.Models;
+using Models.Models;
 
-namespace MSIdentity.Repository
+namespace Repository.Repository
 { /// <summary>
     /// Base class for a repository. The repository should be used within a scope <see cref="OperationScope"/>
     /// </summary>

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Web.Http.Dependencies;
 using Microsoft.Practices.Unity;
 
-namespace MSIdentity.Repository
+namespace Repository.Repository
 {
     /// <summary>
     /// Unity dependency scope

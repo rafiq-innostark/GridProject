@@ -1,8 +1,9 @@
 ﻿using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Web.Mvc;
+using Interfaces.Main_Repositories;
 using Microsoft.Practices.Unity;
-using MSIdentity.MainRepositories;
+using Models.Models;
 using MSIdentity.Models;
 using PagedList;
 
