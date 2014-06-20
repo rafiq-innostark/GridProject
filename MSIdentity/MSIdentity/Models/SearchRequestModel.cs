@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Web;
 
@@ -13,12 +14,33 @@ namespace MSIdentity.Models
         //current page no.
         public int? PageNo { get; set; }
         public int? CategoryId { get; set; }
-        //order by coulmn number
-        public int SortBy { get; set; }
         //sort order
         public bool IsAsc { get; set; }
         // delete item id
-        public int? Id { get; set; }
+        public int Id { get; set; }
+
+        /// <summary>
+        /// Order By Name
+        /// </summary>
+
+        public short SortBy { get; set; }
+
+        /// <summary>
+        /// Product Order By
+        /// </summary>
+        public OrderProductByColumn ProductOrderBy
+        {
+            get
+            {
+                return (OrderProductByColumn)SortBy;
+            }
+            set
+            {
+                SortBy = (short)value;
+            }
+        }
+
+
 
     }
 }

@@ -9,7 +9,7 @@ namespace MSIdentity.Models
 {
     public class Category
     {
-       [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+       //[Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string Name { get; set; }
     }

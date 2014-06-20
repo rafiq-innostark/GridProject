@@ -36,12 +36,14 @@
     <input type="hidden" id="PageSize" name="PageSize" value="@Model.SearchRequestModel.PageSize" />
     <input type="hidden" id="PageCount" name="PageCount" value="@Model.ProductList.PageCount" />
     <input type="hidden" id="DeleteItemId" name="DeleteItemId" value="" />
-    
+    <input type="hidden" id="CurrentPageNumber" name="CurrentPageNumber" value=@Model.SearchRequestModel.PageNo />
     <table class="grid-content-table">
         <tr>
             <th> @SortLink("Name", 1) </th>
             <th> @SortLink("Description", 2)  </th>
             <th> @SortLink("Price", 3)</th>
+            <th> @SortLink("Category Name", 4)</th>
+
             <th> Edit/Delete</th>
         </tr>
 
@@ -58,7 +60,11 @@
                 </td>
                 <td>
 
-                    @Html.DisplayFor(modelItem => item.Price).0
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+
+                    @Html.DisplayFor(modelItem => item.Category.Name)
                 </td>
                 <td>
                     
@@ -108,7 +114,7 @@
                  
 
                         <p>
-                            @Html.TextBox("PageNo", ViewBag.CurrentFilter as string, null, new { style = "width:40px" ,id="UserPageInput"})\@Model.ProductList.PageCount
+                            @Html.TextBox("PageNo", @Model.SearchRequestModel.PageNo , null, new { style = "width:40px", id = "UserPageInput" })\@Model.ProductList.PageCount
                         </p>
 
                    
@@ -122,6 +128,3 @@
   
 </div>
 
-@*<div id="delete-dialog" title="Confirmation">
-    <p>Are you sure you want to delete this Brand?</p>
-</div>*@
